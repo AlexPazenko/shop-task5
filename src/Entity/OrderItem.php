@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\OrderItemRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=OrderItemRepository::class)
@@ -25,6 +26,7 @@ class OrderItem
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Positive
      */
     private $amount;
 
