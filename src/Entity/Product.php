@@ -6,6 +6,8 @@ use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
+use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -14,8 +16,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *   message="This name has already been used."
  * )
  */
-class Product
+class Product implements TimestampableInterface
 {
+    use TimestampableTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -46,18 +49,6 @@ class Product
      * @ORM\Column(type="string", length=255)
      */
     private $description;
-
-    /**
-     * @ORM\Column(type="datetime")
-     * @Assert\NotBlank()
-     */
-    private $creation;
-
-    /**
-     * @ORM\Column(type="datetime")
-     * @Assert\NotBlank()
-     */
-    private $modified;
 
     /**
      * @ORM\Column(type="integer")
@@ -120,30 +111,6 @@ class Product
     public function setDescription(string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getCreation(): ?\DateTimeInterface
-    {
-        return $this->creation;
-    }
-
-    public function setCreation(\DateTimeInterface $creation): self
-    {
-        $this->creation = $creation;
-
-        return $this;
-    }
-
-    public function getModified(): ?\DateTimeInterface
-    {
-        return $this->modified;
-    }
-
-    public function setModified(\DateTimeInterface $modified): self
-    {
-        $this->modified = $modified;
 
         return $this;
     }

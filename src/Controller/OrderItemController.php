@@ -46,4 +46,27 @@ class OrderItemController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+
+
+    /**
+     * @Route("/update/order-item/{id}", name="update_order_item")
+     */
+    public function updateOrderItem(Request $request, OrderItem $orderItem): Response
+    {
+        $form = $this->createForm(CreateOrderItemFormType::class, $orderItem);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $orderItem = $form->getData();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($orderItem);
+            $entityManager->flush();
+
+        }
+        return $this->render('order_item/index.html.twig', [
+            'controller_name' => 'OrderItemController',
+            'form' => $form->createView(),
+        ]);
+    }
 }

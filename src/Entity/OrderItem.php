@@ -31,7 +31,7 @@ class OrderItem
     private $amount;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="orderItem", name="relatedOrder")
+     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="orderItem")
      * @ORM\JoinColumn(nullable=false)
      */
     private $order;

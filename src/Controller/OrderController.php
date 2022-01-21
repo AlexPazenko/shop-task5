@@ -45,4 +45,25 @@ class OrderController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+
+    /**
+     * @Route("/update/order/{id}", name="update_order")
+     */
+    public function updateOrder(Request $request, Order $order): Response
+    {
+        $form = $this->createForm(CreateOrderFormType::class, $order);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $order = $form->getData();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($order);
+            $entityManager->flush();
+        }
+        return $this->render('order/index.html.twig', [
+            'controller_name' => 'OrderController',
+            'form' => $form->createView(),
+        ]);
+    }
 }

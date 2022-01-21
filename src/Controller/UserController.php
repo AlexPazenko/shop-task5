@@ -16,7 +16,7 @@ class UserController extends AbstractController
     /**
      * @Route("/create/user", name="create_user")
      */
-    public function index(Request $request): Response
+    public function createUser(Request $request): Response
     {
         $user = new User();
         $form = $this->createForm(CreateUserFormType::class, $user);
@@ -28,6 +28,30 @@ class UserController extends AbstractController
             $user->setLastName($form->get('last_name')->getData());
             $user->setUserRole($form->get('user_role')->getData());
 
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
+            /*return $this->redirectToRoute('users');*/
+        }
+        return $this->render('user/index.html.twig', [
+            'controller_name' => 'UserController',
+            'form' => $form->createView(),
+        ]);
+    }
+
+
+
+    /**
+     * @Route("/update/user/{id}", name="update_user")
+     */
+    public function updateUser(Request $request, User $user): Response
+    {
+
+        $form = $this->createForm(CreateUserFormType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $user = $form->getData();
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
