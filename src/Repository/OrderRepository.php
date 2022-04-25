@@ -19,6 +19,24 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
 
+  public function getSubscription($reportId, DateTime $reportDate)
+  {
+    $from = new DateTime($reportDate->format("Y-m-d")." 00:00:00");
+    $to   = new DateTime($reportDate->format("Y-m-d")." 23:59:59");
+
+    return $this->createQueryBuilder("e")
+      ->where('e.reportId =:reportId')
+      ->andWhere('e.startDate <= :from')
+      ->andWhere('(e.endDate IS NULL OR e.endDate >= :to)')
+      ->setParameter('reportId', $reportId)
+      ->setParameter('from', $from)
+      ->setParameter('to', $to)
+      ->getQuery()
+      ->getOneOrNullResult();
+  }
+
+
+
     // /**
     //  * @return Order[] Returns an array of Order objects
     //  */

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <section class="jumbotron text-center">
+        <div class="container">
+            <div class="btn-group">
+                <div class="form-row align-items-center ml-3">
+                    {{ include('product/includes/_product_search_form.html.twig') }}
+                </div>
+                <div class="form-row align-items-center ml-5">
+                    {{ include('product/includes/_product_sort_form.html.twig', {'query':query}) }}
+                </div>
+            </div>
+            <p></p>
+        {% if products is not null %}
+            <h3>Products on request "{{ query }}":</h3>
+            <ul>
+                {% for product in products %}
+                    <li>{{ product.name}}.</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <h3>No products found on request "{{ query }}".</h3>
+        {% endif %}
+            <a href="{{ path('create_product') }}">Add new product</a>
+
+        </div>
+    </section>
+
+    {{ knp_pagination_render(products) }}
+{% endblock %}
+
+
+
+
+

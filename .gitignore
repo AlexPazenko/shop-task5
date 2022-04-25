@@ -4,9 +4,11 @@
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
+/public/assets/
 /var/
 /vendor/
+/node_modules/
+.DS_Store
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###

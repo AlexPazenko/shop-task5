@@ -14,25 +14,27 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProductController extends AbstractController
 {
+
     /**
-     * @Route("/products", name="products")
+     * @Route("/products/{page}", defaults={"page": "1"}, name="products")
      */
-    public function showProducts(Request $request): Response
+    public function index($page, Request $request): Response
     {
 
-        $form = $this->createForm(ProductSearchFormType::class);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid())
-        {
-
+        $products = $this->getDoctrine()
+          ->getRepository(Product::class)
+          ->findBySort($page, $request->get('sortby'));
+        if (!$products) {
+            return new Response('Sorry, no products yet!!!');
+        } else {
+            return $this->render('product/products.html.twig', [
+                'controller_name' => 'ProductController',
+                'products' => $products,
+            ]);
         }
 
-
-        return $this->render('product/products.html.twig', [
-            'controller_name' => 'ProductController',
-            'form' => $form->createView(),
-        ]);
     }
+
 
     /**
          * @Route("/create/product", name="create_product")
@@ -57,7 +59,6 @@ class ProductController extends AbstractController
             $entityManager->persist($product);
             $entityManager->flush();
 
-            /*return $this->redirectToRoute('task_success');*/
         }
 
         return $this->render('product/index.html.twig', [
@@ -81,7 +82,6 @@ class ProductController extends AbstractController
             $entityManager->persist($product);
             $entityManager->flush();
 
-            /*return $this->redirectToRoute('task_success');*/
         }
 
         return $this->render('product/index.html.twig', [
@@ -90,33 +90,26 @@ class ProductController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/products", name="product_search")
-     */
-    public function searchBar(Request $request): Response
-    {
-        $form = $this->createFormBuilder(null)
-            ->add('squery', TextType::class)
-            ->add('search', SubmitType::class,[
-                'label' => 'Search product',
-                'attr' => [
-                    'class' => 'btn btn-primary'
-                ]
-            ])
-            ->setAction($this->generateUrl('target_route'))
-            ->setMethod('POST')
 
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted())
+    /**
+     * @Route("/product-search-results/{page}", defaults={"page": "1"}, methods={"GET"},  name="product_search_results")
+     */
+    public function productSearchResults($page, Request $request): Response
+    {
+        $products = null;
+        $query = null;
+        if($query = $request->get('query'))
         {
-            $searchData = $form->get('squery')->getData();
-            return $this->redirectToRoute('products', array('s' => $searchData));
+            $products = $this->getDoctrine()
+              ->getRepository(Product::class)
+              ->findByProductName($query, $page, $request->get('sortby'));
+
+          if(!$products->getItems()) $products = null;
         }
 
-        return $this->render('product/products.html.twig', [
-            'form' => $form->createView()
+        return $this->render('product/product_search_results.html.twig',[
+            'products' => $products,
+            'query' => $query
         ]);
-
     }
 }

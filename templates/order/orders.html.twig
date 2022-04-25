@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+    <section class="jumbotron text-center">
+        <div class="container">
+
+                {#<div class="form-row align-items-center ml-3">
+                    {{ include('order/includes/_product_search_form.html.twig') }}
+                </div>#}
+                {#{{ form(form) }}#}
+                {{ form_start(form) }}
+            <div class="btn-group">
+                <div class="form-row align-items-center">
+                    {{ form_label(form.fromDate) }}
+                    {{ form_widget(form.fromDate) }}
+                </div>
+                <div class="form-row align-items-center ml-3">
+                    {{ form_label(form.toDate) }}
+                    {{ form_widget(form.toDate) }}
+                </div>
+                <div class="form-row align-items-end ml-3">
+                    {{ form_widget(form.search) }}
+                </div>
+                {#<div class="form-row align-items-center ml-3">
+                    {{ include('order/includes/_product_search_form.html.twig') }}
+                </div>#}
+            </div>
+                {{ form_end(form) }}
+
+            <p></p>
+            <h1>All orders:</h1>
+
+            <ul>
+                {% for order in orders %}
+                    <li>{{ order.salesman}}.  {{ order.customer}}. {{ order.paid}}. {{ order.description}}.</li>
+                {% endfor %}
+            </ul>
+
+            {#<a href="{{ path('create_product') }}">Add new product</a>#}
+
+        </div>
+    </section>
+
+    {#{{ knp_pagination_render(products) }}#}
+
+{% endblock %}

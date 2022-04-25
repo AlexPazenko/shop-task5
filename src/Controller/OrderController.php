@@ -4,7 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Order;
 use App\Form\CreateOrderFormType;
+/*use Doctrine\DBAL\Types\DateTimeType;*/
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,13 +17,32 @@ use Symfony\Component\Routing\Annotation\Route;
 class OrderController extends AbstractController
 {
     /**
-     * @Route("/order", name="order")
+     * @Route("/orders/{page}", defaults={"page": "1"}, name="orders")
      */
-    public function index(): Response
+    public function index($page, Request $request): Response
     {
-        return $this->render('order/index.html.twig', [
-            'controller_name' => 'OrderController',
+
+      $form = $this->createFormBuilder()
+        ->setAction($this->generateUrl('order_search_results'))
+        ->add('fromDate', DateTimeType::class, ['label' => 'From', 'attr' => ['class' => 'js-datepicker'],])
+        ->add('toDate', DateTimeType::class, ['label' => 'To'])
+        ->add('search', SubmitType::class)
+        ->setMethod('GET')
+        ->getForm();
+
+      $orders = $this->getDoctrine()
+        ->getRepository(Order::class)
+        /*->findBySort($page, $request->get('sortby'));*/
+        ->findAll();
+
+      if (!$orders) {
+        return new Response('Sorry, no orders yet!!!');
+      } else {
+        return $this->render('order/orders.html.twig', [
+          'orders' => $orders,
+          'form' => $form->createView(),
         ]);
+      }
     }
 
     /**
@@ -65,5 +89,31 @@ class OrderController extends AbstractController
             'controller_name' => 'OrderController',
             'form' => $form->createView(),
         ]);
+
     }
+
+
+  /**
+   * @Route("/order-search-results/{page}", defaults={"page": "1"}, methods={"GET"},  name="order_search_results")
+   */
+  public function orderSearchResults($page, Request $request): Response
+  {
+    $orders = null;
+    $query = null;
+    $fromDate = $request->get('form[fromDate][date][month]');
+    if($query = $request->get('query'))
+    {
+      $orders = $this->getDoctrine()
+        ->getRepository(Order::class)
+        ->findByProductName($query, $page, $request->get('sortby'));
+
+      if(!$orders->getItems()) $orders = null;
+    }
+
+    return $this->render('order/order_search_results.html.twig',[
+      'orders' => $orders,
+      'query' => $query
+    ]);
+  }
+
 }

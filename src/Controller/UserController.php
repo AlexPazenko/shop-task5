@@ -13,6 +13,24 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class UserController extends AbstractController
 {
+
+  /**
+   * @Route("/users/{page}", defaults={"page": "1"}, name="users")
+   */
+  public function index($page, Request $request): Response
+  {
+    $users = $this->getDoctrine()
+      ->getRepository(User::class)
+      ->filterByRole($page, $request->get('filterby'), $request->get('sortuserby'));
+    if (!$users) {
+      return new Response('Sorry, no users yet!!!');
+    } else {
+      return $this->render('user/users.html.twig', [
+        'controller_name' => 'UserController',
+        'users' => $users,
+      ]);
+    }
+  }
     /**
      * @Route("/create/user", name="create_user")
      */
@@ -31,9 +49,9 @@ class UserController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
-            /*return $this->redirectToRoute('users');*/
+          return $this->redirectToRoute('users');
         }
-        return $this->render('user/index.html.twig', [
+        return $this->render('user/user_create.html.twig', [
             'controller_name' => 'UserController',
             'form' => $form->createView(),
         ]);
@@ -55,7 +73,7 @@ class UserController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
-            /*return $this->redirectToRoute('users');*/
+            return $this->redirectToRoute('users');
         }
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
@@ -63,4 +81,25 @@ class UserController extends AbstractController
         ]);
     }
 
+  /**
+   * @Route("/user-search-results/{page}", defaults={"page": "1"}, methods={"GET"},  name="user_search_results")
+   */
+  public function userSearchResults($page, Request $request): Response
+  {
+    $users = null;
+    $query = null;
+    if($query = $request->get('query'))
+    {
+      $users = $this->getDoctrine()
+        ->getRepository(User::class)
+        ->findByUsersEmail($query, $page, $request->get('filterby'), $request->get('sortuserby'));
+
+      if(!$users->getItems()) $users = null;
+    }
+
+    return $this->render('user/user_search_results.html.twig',[
+      'users' => $users,
+      'query' => $query
+    ]);
+  }
 }

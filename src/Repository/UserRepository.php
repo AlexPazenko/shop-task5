@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,10 +15,56 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UserRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, User::class);
+      $this->paginator = $paginator;
     }
+
+  public function filterByRole(int $page, ?string $role, ?string $sort_method)
+  {
+    $sort_method = $sort_method ?? 'ASC';
+    if($role) {
+    $dbquery = $this->createQueryBuilder('u')
+      ->andWhere('u.user_role = :role')
+      ->setParameter('role', $role)
+      ->orderBy('u.user_role', $sort_method)
+      ->getQuery();
+  } else {
+      $dbquery = $this->createQueryBuilder('u')
+        ->orderBy('u.user_role', $sort_method)
+        ->getQuery();
+    }
+    $pagination = $this->paginator->paginate($dbquery, $page, 2);
+    return $pagination;
+  }
+
+
+  public function findByUsersEmail(string $query, int $page, ?string $role, ?string $sort_method)
+  {
+    $sort_method = $sort_method ?? 'ASC';
+
+    $querybuilder = $this->createQueryBuilder('u');
+    $searchTerms = $this->prepareQuery($query);
+
+    foreach ($searchTerms as $key => $term)
+    {
+      $querybuilder
+        ->orWhere('u.email LIKE :t_'.$key)
+        ->setParameter('t_'.$key, '%'.trim($term).'%');
+
+    }
+    $dbquery = $querybuilder
+      ->orderBy('u.user_role', $sort_method)
+      ->getQuery();
+    return $this->paginator->paginate($dbquery, $page, 2);
+  }
+
+
+  private function prepareQuery(string $query): array
+  {
+    return explode(' ', $query);
+  }
 
     // /**
     //  * @return User[] Returns an array of User objects

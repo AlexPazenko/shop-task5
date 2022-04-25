@@ -12,6 +12,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.10",
         "knplabs/doctrine-behaviors": "2.2.0",
+        "knplabs/knp-paginator-bundle": "^5.8",
         "phpdocumentor/reflection-docblock": "^5.3",
         "psr/log": "^1.1",
         "sensio/framework-extra-bundle": "^6.2",
