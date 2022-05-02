@@ -13,9 +13,10 @@ class CreateOrderFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('paid')
+
             ->add('salesman')
             ->add('customer')
+            ->add('paid')
             ->add('description')
             ->add('save', SubmitType::class, ['label' => 'Add new order'])
         ;

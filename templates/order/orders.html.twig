@@ -4,44 +4,40 @@
 
     <section class="jumbotron text-center">
         <div class="container">
-
-                {#<div class="form-row align-items-center ml-3">
-                    {{ include('order/includes/_product_search_form.html.twig') }}
-                </div>#}
-                {#{{ form(form) }}#}
-                {{ form_start(form) }}
             <div class="btn-group">
-                <div class="form-row align-items-center">
-                    {{ form_label(form.fromDate) }}
-                    {{ form_widget(form.fromDate) }}
-                </div>
                 <div class="form-row align-items-center ml-3">
-                    {{ form_label(form.toDate) }}
-                    {{ form_widget(form.toDate) }}
+                    {{ include('order/includes/_order_search_from_to_form.html.twig') }}
                 </div>
-                <div class="form-row align-items-end ml-3">
-                    {{ form_widget(form.search) }}
+                <div class="form-row ml-5">
+                    {{ include('order/includes/_order_sort_by_date_form.html.twig') }}
                 </div>
-                {#<div class="form-row align-items-center ml-3">
-                    {{ include('order/includes/_product_search_form.html.twig') }}
-                </div>#}
             </div>
-                {{ form_end(form) }}
 
             <p></p>
-            <h1>All orders:</h1>
-
+            <h2>All orders:</h2>
+            {% if orders is empty %}
+                <h5>Sorry, no orders yet!!!</h5>
+            {% else %}
             <ul>
                 {% for order in orders %}
-                    <li>{{ order.salesman}}.  {{ order.customer}}. {{ order.paid}}. {{ order.description}}.</li>
+                    <li><h4>Order: {{ order.id}}</h4>
+                        Date: {{ order.date|date("m-d-Y") }}.<br/>
+                        Salesman: {{ order.salesman}}. <br/>
+                        Customer: {{ order.customer}}.<br/>
+                        Is paid: {% if order.paid > 0 %}Paid.{% else %}Not paid.{% endif %}<br/>
+                        Description: {% if order.description is not empty %}
+                            {{ order.description}}.
+                        {% else %}
+                            No description.
+                        {% endif %}
+                    </li><br/>
                 {% endfor %}
             </ul>
+            {% endif %}
 
-            {#<a href="{{ path('create_product') }}">Add new product</a>#}
+            <a href="{{ path('create_order') }}">Add new order</a>
 
         </div>
     </section>
-
-    {#{{ knp_pagination_render(products) }}#}
 
 {% endblock %}

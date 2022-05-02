@@ -22,14 +22,11 @@ class UserController extends AbstractController
     $users = $this->getDoctrine()
       ->getRepository(User::class)
       ->filterByRole($page, $request->get('filterby'), $request->get('sortuserby'));
-    if (!$users) {
-      return new Response('Sorry, no users yet!!!');
-    } else {
+
       return $this->render('user/users.html.twig', [
         'controller_name' => 'UserController',
         'users' => $users,
       ]);
-    }
   }
     /**
      * @Route("/create/user", name="create_user")
@@ -58,7 +55,6 @@ class UserController extends AbstractController
     }
 
 
-
     /**
      * @Route("/update/user/{id}", name="update_user")
      */
@@ -81,25 +77,25 @@ class UserController extends AbstractController
         ]);
     }
 
-  /**
-   * @Route("/user-search-results/{page}", defaults={"page": "1"}, methods={"GET"},  name="user_search_results")
-   */
-  public function userSearchResults($page, Request $request): Response
-  {
-    $users = null;
-    $query = null;
-    if($query = $request->get('query'))
+    /**
+     * @Route("/user-search-results/{page}", defaults={"page": "1"}, methods={"GET"},  name="user_search_results")
+     */
+    public function userSearchResults($page, Request $request): Response
     {
-      $users = $this->getDoctrine()
-        ->getRepository(User::class)
-        ->findByUsersEmail($query, $page, $request->get('filterby'), $request->get('sortuserby'));
+      $users = null;
+      $query = null;
+      if($query = $request->get('query'))
+      {
+        $users = $this->getDoctrine()
+          ->getRepository(User::class)
+          ->findByUsersEmail($query, $page, $request->get('filterby'), $request->get('sortuserby'));
 
-      if(!$users->getItems()) $users = null;
+        if(!$users->getItems()) $users = null;
+      }
+
+      return $this->render('user/user_search_results.html.twig',[
+        'users' => $users,
+        'query' => $query
+      ]);
     }
-
-    return $this->render('user/user_search_results.html.twig',[
-      'users' => $users,
-      'query' => $query
-    ]);
   }
-}

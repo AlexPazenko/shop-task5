@@ -20,24 +20,37 @@ class ProductController extends AbstractController
      */
     public function index($page, Request $request): Response
     {
-
+      $sortByName = $request->get('sortbyname');
+      $sortByPrice = $request->get('sortbyprice');
+      $sortByManufacturer = $request->get('sortbymanufacturer');
+      if (!empty($sortByName)) {
+      $products = $this->getDoctrine()
+        ->getRepository(Product::class)
+        ->sortByName($page, $sortByName);
+      } elseif (!empty($sortByPrice)) {
         $products = $this->getDoctrine()
           ->getRepository(Product::class)
-          ->findBySort($page, $request->get('sortby'));
-        if (!$products) {
-            return new Response('Sorry, no products yet!!!');
-        } else {
-            return $this->render('product/products.html.twig', [
-                'controller_name' => 'ProductController',
-                'products' => $products,
-            ]);
-        }
+          ->sortByPrice($page, $sortByPrice);
+      } elseif (!empty($sortByManufacturer)) {
+        $products = $this->getDoctrine()
+          ->getRepository(Product::class)
+          ->sortByManufacturer($page, $sortByManufacturer);
+      } else {
+        $products = $this->getDoctrine()
+          ->getRepository(Product::class)
+          ->sortByName($page, $sortByName);
+      }
+
+          return $this->render('product/products.html.twig', [
+              'controller_name' => 'ProductController',
+              'products' => $products,
+          ]);
 
     }
 
 
     /**
-         * @Route("/create/product", name="create_product")
+     * @Route("/create/product", name="create_product")
      */
     public function createProduct(Request $request): Response
     {
@@ -102,7 +115,7 @@ class ProductController extends AbstractController
         {
             $products = $this->getDoctrine()
               ->getRepository(Product::class)
-              ->findByProductName($query, $page, $request->get('sortby'));
+              ->findByProductName($query, $page, $request->get('sortbyname'));
 
           if(!$products->getItems()) $products = null;
         }

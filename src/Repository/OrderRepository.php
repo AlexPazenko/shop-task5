@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Order;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * @method Order|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,21 +21,25 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
 
-  public function getSubscription($reportId, DateTime $reportDate)
-  {
-    $from = new DateTime($reportDate->format("Y-m-d")." 00:00:00");
-    $to   = new DateTime($reportDate->format("Y-m-d")." 23:59:59");
+    public function sortByDate(?string $sort_method)
+    {
+      $sort_method = $sort_method ?? 'ASC';
 
-    return $this->createQueryBuilder("e")
-      ->where('e.reportId =:reportId')
-      ->andWhere('e.startDate <= :from')
-      ->andWhere('(e.endDate IS NULL OR e.endDate >= :to)')
-      ->setParameter('reportId', $reportId)
-      ->setParameter('from', $from)
-      ->setParameter('to', $to)
-      ->getQuery()
-      ->getOneOrNullResult();
-  }
+      return $this->createQueryBuilder("e")
+        ->orderBy('e.date', $sort_method)
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function findByDate($from, $to)
+    {
+      return $this->createQueryBuilder("e")
+        ->andWhere('e.date BETWEEN :from AND :to')
+        ->setParameter('from', $from )
+        ->setParameter('to', $to)
+        ->getQuery()
+        ->getResult();
+    }
 
 
 

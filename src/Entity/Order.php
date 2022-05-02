@@ -34,7 +34,6 @@ class Order
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\NotBlank()
      */
     private $date;
 
@@ -153,6 +152,6 @@ class Order
         return $this;
     }
     public function __toString() {
-        return strval($this->id);
+        return strval($this->date);
     }
 }

@@ -9,17 +9,31 @@
         {{ include('product/includes/_product_search_form.html.twig') }}
             </div>
             <div class="form-row align-items-center ml-5">
-        {{ include('product/includes/_product_sort_form.html.twig') }}
+        {{ include('product/includes/_product_sort_by_name_form.html.twig') }}
+        </div>
+        <div class="form-row align-items-center ml-5">
+            {{ include('product/includes/_product_sort_by_manufacturer_form.html.twig') }}
+        </div>
+        <div class="form-row align-items-center ml-5">
+            {{ include('product/includes/_product_sort_by_price_form.html.twig') }}
         </div>
         </div>
         <p></p>
         <h1>All products:</h1>
 
-        <ul>
-            {% for product in products %}
-                <li>{{ product.name}}.</li>
-            {% endfor %}
-        </ul>
+        {% if products is empty %}
+            <h5>Sorry, no products yet!!!</h5>
+        {% else %}
+            <ul>
+                {% for product in products %}
+                    <li><h5>{{ product.name}}</h5>
+                        Price: {{ product.price}}.<br/>
+                        Manufacturer: {{ product.manufacturer}}.<br/>
+                    </li>
+                    <br/>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
         <a href="{{ path('create_product') }}">Add new product</a>
 

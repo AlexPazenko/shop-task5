@@ -16,11 +16,16 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class User
 {
+  const ADMIN = 'admin';
+  const MANAGER = 'manager';
+  const SALESMAN = 'salesman';
+  const CUSTOMER = 'customer';
+
     const ROLES = [
-        'admin' => 'admin',
-        'manager' => 'manager',
-        'salesman' => 'salesman',
-        'customer' => 'customer',
+        self::ADMIN => self::ADMIN,
+        self::MANAGER => self::MANAGER,
+        self::SALESMAN => self::SALESMAN,
+        self::CUSTOMER => self::CUSTOMER,
     ];
     /**
      * @ORM\Id

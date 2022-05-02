@@ -22,12 +22,36 @@ class ProductRepository extends ServiceEntityRepository
         $this->paginator = $paginator;
     }
 
-  public function findBySort(int $page, ?string $sort_method)
+  public function sortByName(int $page, ?string $sort_method)
   {
     $sort_method = $sort_method ?? 'ASC';
 
     $dbquery = $this->createQueryBuilder('p')
       ->orderBy('p.name', $sort_method)
+      ->getQuery();
+
+    $pagination = $this->paginator->paginate($dbquery, $page, 2);
+    return $pagination;
+  }
+
+  public function sortByPrice(int $page, ?string $sort_method)
+  {
+    $sort_method = $sort_method ?? 'ASC';
+
+    $dbquery = $this->createQueryBuilder('p')
+      ->orderBy('p.price', $sort_method)
+      ->getQuery();
+
+    $pagination = $this->paginator->paginate($dbquery, $page, 2);
+    return $pagination;
+  }
+
+  public function sortByManufacturer(int $page, ?string $sort_method)
+  {
+    $sort_method = $sort_method ?? 'ASC';
+
+    $dbquery = $this->createQueryBuilder('p')
+      ->orderBy('p.manufacturer', $sort_method)
       ->getQuery();
 
     $pagination = $this->paginator->paginate($dbquery, $page, 2);

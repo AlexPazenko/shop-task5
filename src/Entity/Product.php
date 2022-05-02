@@ -11,9 +11,6 @@ use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
- * @UniqueEntity(
- *   fields={"name"},
- *   message="This name has already been used."
  * )
  */
 class Product implements TimestampableInterface
@@ -49,6 +46,16 @@ class Product implements TimestampableInterface
      * @ORM\Column(type="string", length=255)
      */
     private $description;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $creation;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $modified;
 
     /**
      * @ORM\Column(type="integer")
@@ -113,6 +120,30 @@ class Product implements TimestampableInterface
         $this->description = $description;
 
         return $this;
+    }
+
+    public function getCreation(): ?\DateTimeInterface
+    {
+      return $this->creation;
+    }
+
+    public function setCreation(\DateTimeInterface $creation): self
+    {
+      $this->creation = $creation;
+
+      return $this;
+    }
+
+    public function getModified(): ?\DateTimeInterface
+    {
+      return $this->modified;
+    }
+
+    public function setModified(\DateTimeInterface $modified): self
+    {
+      $this->modified = $modified;
+
+      return $this;
     }
 
     public function getQuantity(): ?int
