@@ -1,0 +1,29 @@
+{
+  "name": "shop_symfony",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexPazenko/first-symfony.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlexPazenko/first-symfony/issues"
+  },
+  "homepage": "https://github.com/AlexPazenko/first-symfony#readme",
+  "devDependencies": {
+    "@symfony/webpack-encore": "^1.8.2",
+    "webpack-notifier": "^1.14.1"
+  },
+  "dependencies": {
+    "jquery": "^3.6.0"
+  }
+}

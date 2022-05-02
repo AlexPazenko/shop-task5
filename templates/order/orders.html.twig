@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+    <section class="jumbotron text-center">
+        <div class="container">
+            <div class="btn-group">
+                <div class="form-row align-items-center ml-3">
+                    {{ include('order/includes/_order_search_from_to_form.html.twig') }}
+                </div>
+                <div class="form-row ml-5">
+                    {{ include('order/includes/_order_sort_by_date_form.html.twig') }}
+                </div>
+            </div>
+
+            <p></p>
+            <h2>All orders:</h2>
+            {% if orders is empty %}
+                <h5>Sorry, no orders yet!!!</h5>
+            {% else %}
+            <ul>
+                {% for order in orders %}
+                    <li><h4>Order: {{ order.id}}</h4>
+                        Date: {{ order.date|date("m-d-Y") }}.<br/>
+                        Salesman: {{ order.salesman}}. <br/>
+                        Customer: {{ order.customer}}.<br/>
+                        Is paid: {% if order.paid > 0 %}Paid.{% else %}Not paid.{% endif %}<br/>
+                        Description: {% if order.description is not empty %}
+                            {{ order.description}}.
+                        {% else %}
+                            No description.
+                        {% endif %}
+                    </li><br/>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <a href="{{ path('create_order') }}">Add new order</a>
+
+        </div>
+    </section>
+
+{% endblock %}
