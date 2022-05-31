@@ -41,7 +41,7 @@ class UserController extends AbstractController
             $user->setEmail($form->get('email')->getData());
             $user->setFirstName($form->get('first_name')->getData());
             $user->setLastName($form->get('last_name')->getData());
-            $user->setUserRole($form->get('user_role')->getData());
+            $user->setRoles($form->get('roles')->getData());
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);

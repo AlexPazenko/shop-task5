@@ -21,18 +21,18 @@ class UserRepository extends ServiceEntityRepository
       $this->paginator = $paginator;
     }
 
-  public function filterByRole(int $page, ?string $role, ?string $sort_method)
+  public function filterByRole(int $page, ?string $roles, ?string $sort_method)
   {
     $sort_method = $sort_method ?? 'ASC';
-    if($role) {
+    if($roles) {
     $dbquery = $this->createQueryBuilder('u')
-      ->andWhere('u.user_role = :role')
-      ->setParameter('role', $role)
-      ->orderBy('u.user_role', $sort_method)
+      ->andWhere('u.roles = :roles')
+      ->setParameter('roles', $roles)
+      ->orderBy('u.roles', $sort_method)
       ->getQuery();
   } else {
       $dbquery = $this->createQueryBuilder('u')
-        ->orderBy('u.user_role', $sort_method)
+        ->orderBy('u.roles', $sort_method)
         ->getQuery();
     }
     $pagination = $this->paginator->paginate($dbquery, $page, 2);
@@ -55,7 +55,7 @@ class UserRepository extends ServiceEntityRepository
 
     }
     $dbquery = $querybuilder
-      ->orderBy('u.user_role', $sort_method)
+      ->orderBy('u.roles', $sort_method)
       ->getQuery();
     return $this->paginator->paginate($dbquery, $page, 2);
   }

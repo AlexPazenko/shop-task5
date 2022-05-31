@@ -48,9 +48,10 @@ class Order
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="relatedOrder")
+     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="order")
      */
     private $orderItem;
+
 
     public function __construct()
     {
@@ -122,6 +123,10 @@ class Order
         return $this;
     }
 
+    public function __toString() {
+        return strval($this->id);
+    }
+
     /**
      * @return Collection|OrderItem[]
      */
@@ -151,7 +156,6 @@ class Order
 
         return $this;
     }
-    public function __toString() {
-        return strval($this->date);
-    }
+
+
 }

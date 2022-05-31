@@ -3,14 +3,21 @@
 namespace App\Controller;
 
 use App\Entity\Order;
+use App\Entity\OrderItem;
+use App\Entity\User;
 use App\Form\CreateOrderFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+// Include Dompdf required namespaces
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 class OrderController extends AbstractController
 {
+  const PDF = 'pdf';
     /**
      * @Route("/orders/{page}", defaults={"page": "1"}, name="orders")
      */
@@ -22,10 +29,12 @@ class OrderController extends AbstractController
         $orders = $this->getDoctrine()
           ->getRepository(Order::class)
           ->sortByDate($sortByDate);
+          dump($orders);
       } else {
         $orders = $this->getDoctrine()
           ->getRepository(Order::class)
           ->findAll();
+        dump($orders);
       }
 
         return $this->render('order/orders.html.twig', [
@@ -51,6 +60,7 @@ class OrderController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($order);
             $entityManager->flush();
+            $this->createPDF($order);
         }
         return $this->render('order/index.html.twig', [
             'controller_name' => 'OrderController',
@@ -72,6 +82,7 @@ class OrderController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($order);
             $entityManager->flush();
+            $this->createPDF($order);
         }
         return $this->render('order/index.html.twig', [
             'controller_name' => 'OrderController',
@@ -102,5 +113,45 @@ class OrderController extends AbstractController
         'orders' => $orders,
       ]);
     }
+
+  public function createPDF($order)
+  {
+    $pdfOrder = '/order/orderInfo.html.twig';
+    $pdfOptions = new Options();
+    $pdfOptions->set('defaultFont', 'Arial');
+
+    $dompdf = new Dompdf($pdfOptions);
+
+    $orderId = $order->getId();
+    $order->getId();
+    $customer_id = $order->getCustomer();
+    $customer = $this->getDoctrine()
+      ->getRepository(User::class)
+      ->find($customer_id);
+    $customerEmail = $customer->getEmail();
+    $orderItems = $order->getOrderItem();
+
+    $html = $this->renderView(self::PDF.$pdfOrder, [
+      'title' => "The Order was created on the ". date("Y-m-d") . " at " . date("h:i:s"),
+      'orderId' => $orderId,
+      'customerEmail' => $customerEmail,
+      'orderItems' => $orderItems
+
+
+    ]);
+
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+
+    $output = $dompdf->output();
+
+    $publicDirectory = $this->getParameter('pdf_directory');
+    $pdfFilepath =  $publicDirectory. '/order.pdf';
+
+    file_put_contents($pdfFilepath, $output);
+
+    return new Response("The PDF file has been succesfully generated!");
+  }
 
 }

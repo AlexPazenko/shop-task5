@@ -31,10 +31,10 @@ class OrderItem
     private $amount;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="orderItem")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="orderItems")
      */
     private $order;
+
 
     public function getId(): ?int
     {
@@ -75,5 +75,9 @@ class OrderItem
         $this->order = $order;
 
         return $this;
+    }
+
+    public function __toString() {
+      return strval($this->id);
     }
 }
