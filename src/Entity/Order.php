@@ -125,11 +125,9 @@ class Order implements TimestampableInterface
 
     public function addOrderItem(OrderItem $orderItem): self
     {
-      dump($orderItem);
         if (!$this->orderItem->contains($orderItem)) {
             $this->orderItem[] = $orderItem;
             $orderItem->setOrderId($this);
-          dump($this->orderItem);
         }
 
         return $this;
