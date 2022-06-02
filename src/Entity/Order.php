@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
@@ -7,13 +8,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
+use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
 /**
  * @ORM\Entity(repositoryClass=OrderRepository::class)
  * @ORM\Table(name="`order`")
  */
-class Order
+class Order implements TimestampableInterface
 {
+  use TimestampableTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -31,11 +35,6 @@ class Order
      * @ORM\ManyToOne(targetEntity=User::class)
      */
     private $customer;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $date;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -57,6 +56,7 @@ class Order
     {
         $this->orderItem = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -83,18 +83,6 @@ class Order
     public function setCustomer(?User $customer): self
     {
         $this->customer = $customer;
-
-        return $this;
-    }
-
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTimeInterface $date): self
-    {
-        $this->date = $date;
 
         return $this;
     }
@@ -137,9 +125,11 @@ class Order
 
     public function addOrderItem(OrderItem $orderItem): self
     {
+      dump($orderItem);
         if (!$this->orderItem->contains($orderItem)) {
             $this->orderItem[] = $orderItem;
-            $orderItem->setOrder($this);
+            $orderItem->setOrderId($this);
+          dump($this->orderItem);
         }
 
         return $this;
@@ -149,13 +139,12 @@ class Order
     {
         if ($this->orderItem->removeElement($orderItem)) {
             // set the owning side to null (unless already changed)
-            if ($orderItem->getOrder() === $this) {
-                $orderItem->setOrder(null);
+            if ($orderItem->getOrderId() === $this) {
+                $orderItem->setOrderId(null);
             }
         }
 
         return $this;
     }
-
 
 }

@@ -21,7 +21,6 @@ class OrderFixture extends Fixture implements FixtureGroupInterface, DependentFi
       $order->setSalesman($salesman);
       $customer = $manager->getRepository(User::class)->find($customer_id);
       $order->setCustomer($customer);
-      $order->setDate(new \DateTime());
       $order->setPaid($paid);
       $order->setDescription($description);
       $manager->persist($order);

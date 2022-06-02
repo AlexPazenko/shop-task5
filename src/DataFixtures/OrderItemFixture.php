@@ -20,7 +20,7 @@ class OrderItemFixture extends Fixture implements FixtureGroupInterface, Depende
       $product = $manager->getRepository(Product::class)->find($product_id);
       $orderItem->setProduct($product);
       $order = $manager->getRepository(Order::class)->find($order_id);
-      $orderItem->setOrder($order);
+      $orderItem->setOrderId($order);
       $orderItem->setAmount($amount);
       $manager->persist($orderItem);
     }

@@ -31,9 +31,10 @@ class OrderItem
     private $amount;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="orderItems")
+     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="orderItem")
      */
     private $order;
+
 
 
     public function getId(): ?int
@@ -65,19 +66,22 @@ class OrderItem
         return $this;
     }
 
-    public function getOrder(): ?Order
+
+    public function __toString() {
+      return strval($this->id);
+    }
+
+    public function getOrderId(): ?Order
     {
         return $this->order;
     }
 
-    public function setOrder(?Order $order): self
+    public function setOrderId(?Order $order): self
     {
         $this->order = $order;
 
         return $this;
     }
 
-    public function __toString() {
-      return strval($this->id);
-    }
+
 }

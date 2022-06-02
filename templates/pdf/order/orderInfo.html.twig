@@ -14,17 +14,16 @@
         <th>Email</th>
     </tr>
     <tr>
-        <td>{{ orderId }}</td>
         {% for orderItem in orderItems %}
-            <td>{{ orderItem.id }}</td>
-            <td>{{ orderItem.amount }}</td>
-        {% endfor %}
+    <tr>
+        <td>{{ orderId }}</td>
+        <td>{{ orderItem.id}}</td>
+        <td>{{ orderItem.amount}}</td>
         <td>{{ customerEmail }}</td>
     </tr>
+        {% endfor %}
+
 </table>
-
-
-
 
 </body>
 </html>
