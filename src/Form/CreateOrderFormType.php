@@ -18,6 +18,7 @@ class CreateOrderFormType extends AbstractType
             ->add('customer')
             ->add('paid')
             ->add('description')
+            ->add('orderItem')
             ->add('save', SubmitType::class, ['label' => 'Add new order'])
         ;
     }

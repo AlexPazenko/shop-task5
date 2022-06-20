@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+<h4>{{ title }}</h4>
+<table border="1" style="border-collapse:collapse">
+    <tr>
+        <th>Order id</th>
+        <th>Item</th>
+        <th>Quantity</th>
+        <th>Email</th>
+    </tr>
+
+    {% if orderItems is not empty %}
+        {% for orderItem in orderItems %}
+    <tr>
+        <td>{{ orderId }}</td>
+        <td>{{ orderItem.id}}</td>
+        <td>{{ orderItem.amount}}</td>
+        <td>{{ customerEmail }}</td>
+    </tr>
+        {% endfor %}
+    {% else %}
+        <tr>
+            <td>{{ orderId }}</td>
+            <td></td>
+            <td></td>
+            <td>{{ customerEmail }}</td>
+        </tr>
+    {% endif %}
+
+
+</table>
+
+</body>
+</html>

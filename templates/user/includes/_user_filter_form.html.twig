@@ -1,10 +1,10 @@
 <form id="form-filter" action="" method="GET">
     <select name="filterby" class="custom-select mr-sm-2" id="inlineFormCustomSelect" onchange='this.form.submit();'>
         <option selected>Filter by role</option>
-        <option value="admin">Admin</option>
-        <option value="manager">Manager</option>
-        <option value="salesman">Salesman</option>
-        <option value="customer">Customer</option>
+        <option value="ROLE_ADMIN">Admin</option>
+        <option value="ROLE_MANAGER">Manager</option>
+        <option value="ROLE_SALESMAN">Salesman</option>
+        <option value="ROLE_CUSTOMER">Customer</option>
     </select>
     {% if query is defined %}
         <input type="hidden" name="query" value="{{ query }}">

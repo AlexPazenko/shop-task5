@@ -19,7 +19,7 @@ class CreateUserFormType extends AbstractType
             ->add('email')
             ->add('first_name')
             ->add('last_name')
-            ->add('user_role', ChoiceType::class, [
+            ->add('roles', ChoiceType::class, [
                 'choices'  => $roles
             ])
             ->add('save', SubmitType::class, ['label' => 'Create new user'])

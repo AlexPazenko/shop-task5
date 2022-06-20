@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
@@ -7,13 +8,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
+use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
 /**
  * @ORM\Entity(repositoryClass=OrderRepository::class)
  * @ORM\Table(name="`order`")
  */
-class Order
+class Order implements TimestampableInterface
 {
+  use TimestampableTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -33,11 +37,6 @@ class Order
     private $customer;
 
     /**
-     * @ORM\Column(type="datetime")
-     */
-    private $date;
-
-    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $paid;
@@ -48,14 +47,21 @@ class Order
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="relatedOrder")
+     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="order")
      */
     private $orderItem;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $pdf;
+
 
     public function __construct()
     {
         $this->orderItem = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -86,18 +92,6 @@ class Order
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTimeInterface $date): self
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
     public function getPaid(): ?bool
     {
         return $this->paid;
@@ -122,6 +116,10 @@ class Order
         return $this;
     }
 
+    public function __toString() {
+        return strval($this->id);
+    }
+
     /**
      * @return Collection|OrderItem[]
      */
@@ -134,7 +132,7 @@ class Order
     {
         if (!$this->orderItem->contains($orderItem)) {
             $this->orderItem[] = $orderItem;
-            $orderItem->setOrder($this);
+            $orderItem->setOrderId($this);
         }
 
         return $this;
@@ -144,14 +142,24 @@ class Order
     {
         if ($this->orderItem->removeElement($orderItem)) {
             // set the owning side to null (unless already changed)
-            if ($orderItem->getOrder() === $this) {
-                $orderItem->setOrder(null);
+            if ($orderItem->getOrderId() === $this) {
+                $orderItem->setOrderId(null);
             }
         }
 
         return $this;
     }
-    public function __toString() {
-        return strval($this->date);
+
+    public function getPdf(): ?string
+    {
+        return $this->pdf;
     }
+
+    public function setPdf(?string $pdf): self
+    {
+        $this->pdf = $pdf;
+
+        return $this;
+    }
+
 }

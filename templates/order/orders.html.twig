@@ -21,7 +21,6 @@
             <ul>
                 {% for order in orders %}
                     <li><h4>Order: {{ order.id}}</h4>
-                        Date: {{ order.date|date("m-d-Y") }}.<br/>
                         Salesman: {{ order.salesman}}. <br/>
                         Customer: {{ order.customer}}.<br/>
                         Is paid: {% if order.paid > 0 %}Paid.{% else %}Not paid.{% endif %}<br/>
@@ -29,6 +28,11 @@
                             {{ order.description}}.
                         {% else %}
                             No description.
+                        {% endif %}<br/>
+                        Download PDF: {% if order.pdf is not empty %}
+                            <a href="{{ order.pdf}}" target="_blank">PDF</a>.
+                        {% else %}
+                            No PDF.
                         {% endif %}
                     </li><br/>
                 {% endfor %}
