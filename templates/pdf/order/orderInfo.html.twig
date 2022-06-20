@@ -13,7 +13,8 @@
         <th>Quantity</th>
         <th>Email</th>
     </tr>
-    <tr>
+
+    {% if orderItems is not empty %}
         {% for orderItem in orderItems %}
     <tr>
         <td>{{ orderId }}</td>
@@ -22,6 +23,15 @@
         <td>{{ customerEmail }}</td>
     </tr>
         {% endfor %}
+    {% else %}
+        <tr>
+            <td>{{ orderId }}</td>
+            <td></td>
+            <td></td>
+            <td>{{ customerEmail }}</td>
+        </tr>
+    {% endif %}
+
 
 </table>
 

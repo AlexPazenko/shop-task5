@@ -51,6 +51,11 @@ class Order implements TimestampableInterface
      */
     private $orderItem;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $pdf;
+
 
     public function __construct()
     {
@@ -141,6 +146,18 @@ class Order implements TimestampableInterface
                 $orderItem->setOrderId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPdf(): ?string
+    {
+        return $this->pdf;
+    }
+
+    public function setPdf(?string $pdf): self
+    {
+        $this->pdf = $pdf;
 
         return $this;
     }

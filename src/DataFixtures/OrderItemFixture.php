@@ -14,12 +14,12 @@ class OrderItemFixture extends Fixture implements FixtureGroupInterface, Depende
 {
   public function load(ObjectManager $manager): void
   {
-    foreach ($this->getOrderItemData() as [$product_id, $order_id, $amount])
+    foreach ($this->getOrderItemData() as [$productId, $orderId, $amount])
     {
       $orderItem = new OrderItem();
-      $product = $manager->getRepository(Product::class)->find($product_id);
+      $product = $manager->getRepository(Product::class)->find($productId);
       $orderItem->setProduct($product);
-      $order = $manager->getRepository(Order::class)->find($order_id);
+      $order = $manager->getRepository(Order::class)->find($orderId);
       $orderItem->setOrderId($order);
       $orderItem->setAmount($amount);
       $manager->persist($orderItem);

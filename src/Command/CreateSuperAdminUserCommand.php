@@ -41,7 +41,6 @@ class CreateSuperAdminUserCommand extends Command
     $progressBar = new ProgressBar($output, 100);
     $progressBar->start();
     $progressBar->advance(1);
-    $progressBar->finish();
     $io = new SymfonyStyle($input, $output);
     $firstName = $input->getArgument('firstname');
     $lastName = $input->getArgument('lastname');
@@ -52,7 +51,7 @@ class CreateSuperAdminUserCommand extends Command
       $this->CreateSuperAdminUser->createUser($firstName,$lastName,$email,$password);
       $io->success('You have created a new user with superAdmin rights.');
     }
-
+    $progressBar->finish();
     return 0;
   }
 

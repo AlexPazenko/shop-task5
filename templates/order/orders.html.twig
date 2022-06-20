@@ -28,6 +28,11 @@
                             {{ order.description}}.
                         {% else %}
                             No description.
+                        {% endif %}<br/>
+                        Download PDF: {% if order.pdf is not empty %}
+                            <a href="{{ order.pdf}}" target="_blank">PDF</a>.
+                        {% else %}
+                            No PDF.
                         {% endif %}
                     </li><br/>
                 {% endfor %}

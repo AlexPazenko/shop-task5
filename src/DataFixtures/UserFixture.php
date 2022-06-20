@@ -10,21 +10,24 @@ use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 
 class UserFixture extends Fixture implements FixtureGroupInterface
 {
+  public const ADMIN_USER_REFERENCE = 'user';
   public function __construct(UserPasswordEncoderInterface $password_encoder)
   {
     $this->password_encoder = $password_encoder;
   }
   public function load(ObjectManager $manager): void
   {
-    foreach ($this->getUserData() as [$email, $first_name, $last_name, $password, $roles])
+    foreach ($this->getUserData() as [$email, $firstName, $lastName, $password, $roles])
     {
       $user = new User();
       $user->setEmail($email);
-      $user->setFirstName($first_name);
-      $user->setLastName($last_name);
+      $user->setFirstName($firstName);
+      $user->setLastName($lastName);
       $user->setPassword($this->password_encoder->encodePassword($user, $password));
       $user->setRoles($roles);
       $manager->persist($user);
+      /*$manager->flush();
+      $this->addReference(self::ADMIN_USER_REFERENCE, $user);*/
     }
 
     $manager->flush();
