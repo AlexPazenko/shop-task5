@@ -1,9 +1,26 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
+<div class="row">
+    <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+        <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{path('front')}}">Front page</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{path('orders')}}">Orders</a>
+                </li>
+                {%  if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{path('users')}}">Users</a>
+                    </li>
+                {% endif %}
+            </ul>
 
-    <section class="jumbotron text-center">
-        <div class="container">
+        </div>
+    </nav>
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
             <div class="btn-group">
                 <div class="form-row align-items-center ml-3">
                     {{ include('order/includes/_order_search_from_to_form.html.twig') }}
@@ -14,7 +31,7 @@
             </div>
 
             <p></p>
-            <h2>All orders:</h2>
+            <h3 class="text-left">Orders list:</h3>
             {% if orders is empty %}
                 <h5>Sorry, no orders yet!!!</h5>
             {% else %}
@@ -41,7 +58,6 @@
 
             <a href="{{ path('create_order') }}">Add new order</a>
 
-        </div>
-    </section>
-
+    </main>
+</div>
 {% endblock %}
