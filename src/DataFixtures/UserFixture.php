@@ -26,8 +26,8 @@ class UserFixture extends Fixture implements FixtureGroupInterface
       $user->setPassword($this->password_encoder->encodePassword($user, $password));
       $user->setRoles($roles);
       $manager->persist($user);
-      /*$manager->flush();
-      $this->addReference(self::ADMIN_USER_REFERENCE, $user);*/
+      $manager->flush();
+      /*$this->addReference(self::ADMIN_USER_REFERENCE, $user);*/
     }
 
     $manager->flush();
@@ -36,14 +36,14 @@ class UserFixture extends Fixture implements FixtureGroupInterface
   private function getUserData(): array
   {
     return [
-      ['john.wayne@symf4.loc', 'John', 'Wayne', 'password', 'Admin'],
-      ['peater.parker@symf4.loc', 'Peter', 'Parker', 'password', 'Admin'],
-      ['john.doe@symf4.loc', 'John', 'Doe', 'password', 'Manager'],
-      ['bob.marley@symf4.loc', 'Bob', 'Marley', 'password', 'Manager'],
-      ['steve.jobs@symf4.loc', 'Steve', 'Jobs', 'password', 'Salesman'],
-      ['willem.dafoe@symf4.loc', 'Willem', 'Dafoe', 'password', 'Salesman'],
-      ['joaquin.phoenix@symf4.loc', 'Joaquin', 'Phoenix', 'password', 'Customer'],
-      ['jared.leto@symf4.loc', 'Jared', 'Leto', 'password', 'Customer'],
+      ['john.wayne@symf4.loc', 'John', 'Wayne', 'password', ['ROLE_ADMIN']],
+      ['peater.parker@symf4.loc', 'Peter', 'Parker', 'password', ['ROLE_ADMIN']],
+      ['john.doe@symf4.loc', 'John', 'Doe', 'password', ['ROLE_MANAGER']],
+      ['bob.marley@symf4.loc', 'Bob', 'Marley', 'password', ['ROLE_MANAGER']],
+      ['steve.jobs@symf4.loc', 'Steve', 'Jobs', 'password', ['ROLE_SALESMAN']],
+      ['willem.dafoe@symf4.loc', 'Willem', 'Dafoe', 'password', ['ROLE_SALESMAN']],
+      ['joaquin.phoenix@symf4.loc', 'Joaquin', 'Phoenix', 'password', ['ROLE_CUSTOMER']],
+      ['jared.leto@symf4.loc', 'Jared', 'Leto', 'password', ['ROLE_CUSTOMER']],
     ];
   }
 

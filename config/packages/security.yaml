@@ -3,16 +3,41 @@ security:
         App\Entity\User:
             algorithm: auto
 
+
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        users_in_memory: { memory: null }
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+        # used to reload user from session & other features (e.g. switch_user)
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             anonymous: lazy
-            provider: users_in_memory
+            provider: app_user_provider
+            form_login:
+                login_path: login
+                check_path: login
+
+
+                #csrf.token_generator:security.csrf.token_manager
+                username_parameter: '_email'
+                #password_parameter: 'password'
+                csrf_token_generator: security.csrf.token_manager
+                default_target_path: front
+
+            logout:
+                path: logout
+                target: login
+
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 60480 #1 week in seconds
+                #always_remember_me: true
+                path: /
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -23,5 +48,10 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/orders, roles: ROLE_USER }
+         - { path: ^/products, roles: ROLE_USER }
+         - { path: ^/users, roles: ROLE_ADMIN }
+         - { path: ^/create/(user|product), roles: ROLE_ADMIN }
+         - { path: ^/update/(user|product), roles: ROLE_ADMIN }
+         - { path: ^/create/(order|order-item), roles: ROLE_USER }
+         - { path: ^/update/(order|order-item), roles: ROLE_USER }

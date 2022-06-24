@@ -19,6 +19,7 @@ class UserController extends AbstractController
    */
   public function index($page, Request $request): Response
   {
+    $ttt = ["ROLE_ADMIN"];
     $users = $this->getDoctrine()
       ->getRepository(User::class)
       ->filterByRole($page, $request->get('filterby'), $request->get('sortuserby'));
